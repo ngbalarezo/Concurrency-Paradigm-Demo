@@ -1,24 +1,47 @@
 package CustomClasses;
-import java.util.Random;
-import java.time.Instant;
 import java.time.Duration;
+import java.time.Instant;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class Demo {
     public String demoName;
-    public int arraySum;
 
     // constructor
     public Demo(String demoName) {
         this.demoName = demoName;
-        this.arraySum = 0;
     }
 
-//    public static void singleThreadedSum {
-//
-//    }
-//
-//    public static void multiThreadedSum {
-//
-//    }
+    // method sums array elements using a single thread
+    public void singleThreadedSum(int[] array) {
+        // create AtomicInteger and single thread
+        AtomicLong sum = new AtomicLong();
+        Thread summationThread = new Thread(()-> {
+            for (int i = 0; i < array.length; i++) {
+                sum.addAndGet(array[i]);
+            }
+        });
+
+        // timer start, thread start, and calculate timeElapsed
+        Instant start = Instant.now();
+        summationThread.start();
+        try {
+            summationThread.join();
+        } catch (InterruptedException e) {
+            System.out.println("Thread was interrupted: " + e.getMessage());
+            Thread.currentThread().interrupt();
+            return;
+        }
+        Instant finish = Instant.now();
+        long timeElapsed = Duration.between(start, finish).toMillis();
+
+        // print results
+        System.out.println(this.demoName + ": sum of array calculated in: " + timeElapsed + " ms.");
+        System.out.println(this.demoName + ": sum = : " + sum.get());
+    }
+
+    public int multiThreadedSum(int[] array) {
+        return 0;
+    }
 
 }

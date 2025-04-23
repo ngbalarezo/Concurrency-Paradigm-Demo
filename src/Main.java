@@ -56,25 +56,30 @@ public class Main {
             latch.countDown();
         });
 
-        EnemySpawnThread.start();
-        EnemyCheckThread.start();
+//        EnemySpawnThread.start();
+//        EnemyCheckThread.start();
 
-        // begin main demo
-
-        try {
-            latch.await(); // Wait until the latch reaches zero
-        } catch (InterruptedException e) {
-            System.out.println("Thread was interrupted: " + e.getMessage());
-        }
+        // begin main demo (latch try-catch pauses main thread until initial demo threads are finished)
+//        try {
+//            latch.await();
+//        } catch (InterruptedException e) {
+//            System.out.println("Thread was interrupted: " + e.getMessage());
+//        }
 
         System.out.println("Now let's begin the main demo!");
         System.out.println("Press enter to continue...");
         scanner.nextLine();
 
+        // create Demo objects and array according to user specified size
         int arraySize = 1000000;
-        Demo SingleThreadedDemo = new Demo("Single Threaded Demo");
-        Demo MultiThreadedDemo = new Demo("Multi Threaded Demo");
+        Demo singleThreadedDemo = new Demo("Single Threaded Demo");
+        Demo multiThreadedDemo = new Demo("Multi Threaded Demo");
         int[] array = generateArray(arraySize);
+        long singleThreadedSum = 0;
+        long multiThreadedSum = 0;
+
+        // start threads and finish demo
+        singleThreadedDemo.singleThreadedSum(array);
 
     }
 
@@ -84,7 +89,7 @@ public class Main {
 
         Instant start = Instant.now();
         // randomly generate new array using for loop
-        for(int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             array[i] = i;
         }
         Instant finish = Instant.now();
