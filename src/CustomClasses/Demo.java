@@ -1,8 +1,10 @@
 package CustomClasses;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.*;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Demo {
     public String demoName;
@@ -37,11 +39,27 @@ public class Demo {
 
         // print results
         System.out.println(this.demoName + ": sum of array calculated in: " + timeElapsed + " ms.");
-        System.out.println(this.demoName + ": sum = : " + sum.get());
+        System.out.println(this.demoName + ": sum = : " + sum.get() + "\n");
     }
 
-    public int multiThreadedSum(int[] array) {
-        return 0;
+    public void multiThreadedSum(int[] array) {
+        int threadCount = 4;
+        ExecutorService executor = Executors.newFixedThreadPool(threadCount);
+        int arrayPortionSize = array.length/threadCount;
+        List<Future<Long>> futures = new ArrayList<>();
+
+        // create tasks
+
+
+        // timer start, thread start, and calculate timeElapsed
+        Instant start = Instant.now();
+
+        Instant finish = Instant.now();
+        long timeElapsed = Duration.between(start, finish).toMillis();
+
+        // print results
+        System.out.println(this.demoName + ": sum of array calculated in: " + timeElapsed + " ms.");
+        System.out.println(this.demoName + ": sum = : " + finalSum);
     }
 
 }
