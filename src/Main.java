@@ -2,12 +2,14 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.concurrent.CountDownLatch;
 import java.util.Scanner;
+import java.util.concurrent.ExecutionException;
+
 import CustomClasses.Demo;
 
 public class Main {
     public static boolean enemyNearby = false;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException, ExecutionException {
         Scanner scanner = new Scanner(System.in);
         CountDownLatch latch = new CountDownLatch(2);
 
@@ -35,7 +37,7 @@ public class Main {
         });
 
         Thread EnemyCheckThread = new Thread(()->{
-            while(enemyNearby == false){
+            while(!enemyNearby){
                 System.out.println("No enemies nearby.");
                 try {
                     Thread.sleep(2000);
@@ -56,22 +58,17 @@ public class Main {
             latch.countDown();
         });
 
-//        EnemySpawnThread.start();
-//        EnemyCheckThread.start();
+        EnemySpawnThread.start();
+        EnemyCheckThread.start();
 
-        // begin main demo (latch try-catch pauses main thread until initial demo threads are finished)
-//        try {
-//            latch.await();
-//        } catch (InterruptedException e) {
-//            System.out.println("Thread was interrupted: " + e.getMessage());
-//        }
-
+        //begin main demo (latch try-catch pauses main thread until initial demo threads are finished)
+        latch.await();
         System.out.println("Now let's begin the main demo!");
         System.out.println("Press enter to continue...");
         scanner.nextLine();
 
         // create Demo objects and array according to user specified size
-        int arraySize = 1000000;
+        int arraySize = 100000000;
         Demo singleThreadedDemo = new Demo("Single Threaded Demo");
         Demo multiThreadedDemo = new Demo("Multi Threaded Demo");
         int[] array = generateArray(arraySize);
@@ -80,7 +77,7 @@ public class Main {
 
         // start threads and finish demo
         singleThreadedDemo.singleThreadedSum(array);
-
+        multiThreadedDemo.multiThreadedSum(array);
     }
 
     // method generates array
